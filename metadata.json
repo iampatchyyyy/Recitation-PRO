@@ -1,0 +1,6 @@
+{
+  "name": "Recitation Tracker",
+  "description": "A gamified student recitation tracker with point logs, hot streaks, interactive spin-the-wheel selection, dynamic group generators, and beautiful PDF grade reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
