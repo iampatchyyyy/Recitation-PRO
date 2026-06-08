@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student roster profile details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatarSeed": { "type": "string" },
+        "points": { "type": "integer" },
+        "streak": { "type": "integer" },
+        "lastRecitationDate": { "type": "string" },
+        "attendance": { "type": "string" }
+      },
+      "required": ["id", "name", "avatarSeed", "points", "streak", "attendance"]
+    },
+    "RecitationEvent": {
+      "title": "RecitationEvent",
+      "description": "Historical log entry of participation grading",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "pointsAwarded": { "type": "integer" },
+        "reason": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "studentId", "studentName", "pointsAwarded", "timestamp"]
+    },
+    "Classroom": {
+      "title": "Classroom",
+      "description": "Classroom metadata, rosters, and activity history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "subject": { "type": "string" },
+        "students": { "type": "array" },
+        "history": { "type": "array" },
+        "updatedAt": { "type": "string" },
+        "sessionActive": { "type": "boolean" },
+        "sessionStartTime": { "type": "string" },
+        "sessionElapsedTime": { "type": "string" }
+      },
+      "required": ["id", "name", "students", "history"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/classes/{classId}": {
+      "schema": "Classroom",
+      "description": "Personalized classroom folders owned by each user"
+    }
+  }
+}

@@ -11,8 +11,10 @@ export default function Leaderboard({ currentClass }: LeaderboardProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [logFilter, setLogFilter] = useState<'all' | 'high'>('all');
 
-  // Sort students by points descending
-  const sortedStudents = [...currentClass.students].sort((a, b) => b.points - a.points);
+  // Sort students by points descending, excluding archived
+  const sortedStudents = [...currentClass.students]
+    .filter((s) => !s.archived)
+    .sort((a, b) => b.points - a.points);
 
   // Search filtered
   const filteredStudents = sortedStudents.filter((s) =>

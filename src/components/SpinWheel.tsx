@@ -20,9 +20,9 @@ export default function SpinWheel({
   onRecordEvent,
   onUpdateStudents
 }: SpinWheelProps) {
-  // Only students marked "present" or "late" should be selectable
+  // Only students marked "present" or "late" and not archived should be selectable
   const activeStudents = currentClass.students.filter(
-    (s) => s.attendance === 'present' || s.attendance === 'late'
+    (s) => !s.archived && (s.attendance === 'present' || s.attendance === 'late')
   );
 
   const [isSpinning, setIsSpinning] = useState(false);

@@ -14,9 +14,9 @@ export default function GroupMaker({
   onRecordEvent,
   onUpdateStudents
 }: GroupMakerProps) {
-  // Only students present/late are grouped
+  // Only students present/late and not archived are grouped
   const activeStudents = currentClass.students.filter(
-    (s) => s.attendance === 'present' || s.attendance === 'late'
+    (s) => !s.archived && (s.attendance === 'present' || s.attendance === 'late')
   );
 
   const [groupMode, setGroupMode] = useState<'count' | 'size'>('count');

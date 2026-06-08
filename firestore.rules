@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitive definitions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isUserVerified(userId) {
+      return isOwner(userId) && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validator for Classroom entity to protect against shadow data injection
+    function isValidClassroom(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && (data.get('subject', '') is string && data.get('subject', '').size() <= 200)
+        && data.students is list && data.students.size() <= 200
+        && data.history is list && data.history.size() <= 5000
+        && (data.get('sessionActive', false) is bool)
+        && (data.get('sessionStartTime', '') is string || data.get('sessionStartTime', null) == null)
+        && (data.get('sessionElapsedTime', '') is string);
+    }
+
+    // Path Rules
+    match /users/{userId}/classes/{classId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isUserVerified(userId)
+        && isValidClassroom(incoming())
+        && incoming().id == classId;
+      allow update: if isUserVerified(userId)
+        && isValidClassroom(incoming())
+        && incoming().id == classId;
+      allow delete: if isUserVerified(userId);
+    }
+  }
+}
